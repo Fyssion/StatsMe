@@ -1,0 +1,4 @@
+SETUP_CONFIG = False
+
+DATABASE_URI = None
+TRACK_MESSAGES = False
