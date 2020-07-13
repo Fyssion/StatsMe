@@ -1,4 +1,4 @@
-# StatsME
+# StatsMe
 
 Statistics tracking cog for discord.py bots
 
