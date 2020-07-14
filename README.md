@@ -18,12 +18,13 @@ from discord.ext import commands
 import discord
 
 import statsme
+from statsme.recorders.databases import DatabasesRecorder
 
 
 bot = commands.Bot(command_prefix="$")
 
 # Congifure and load StatsMe
-statsme.configure(database_uri="database_uri_here")
+statsme.configure(recorder=DatabasesRecorder("database-uri-here"))
 bot.load_extension("statsme")
 
 bot.run("token_here")
