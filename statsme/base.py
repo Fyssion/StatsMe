@@ -3,6 +3,7 @@ import discord
 
 import datetime
 
+from . import config
 from .bot_data import BotData
 
 
@@ -15,7 +16,9 @@ class StatsMeBase(commands.Cog):
         self.bot = bot
         self.start_time = datetime.datetime.now()
 
-        self.db = None
+        self.recorder = config.RECORDER
+
+        self.bot.loop.create_task(self.recorder.connect())
 
         # add counters to bot
         if not hasattr(bot, "_statsme"):
@@ -32,7 +35,7 @@ class StatsMeBase(commands.Cog):
         return True
 
     def cog_unload(self):
-        self.bot.loop.create_task(self.db.close())
+        self.bot.loop.create_task(self.recorder.disconnect())
 
     # Event listeners
 
@@ -59,24 +62,24 @@ class StatsMeBase(commands.Cog):
         command = ctx.command.qualified_name
         self.bot_data.commands[command] += 1
 
-        # message = ctx.message
-        # if ctx.guild is None:
-        #     guild_id = None
-        # else:
-        #     guild_id = ctx.guild.id
+        message = ctx.message
+        if ctx.guild is None:
+            guild_id = None
+        else:
+            guild_id = ctx.guild.id
 
-        # async with self._batch_lock:
-        #     self._data_batch.append(
-        #         {
-        #             "name": command,
-        #             "guild": guild_id,
-        #             "channel": ctx.channel.id,
-        #             "author": ctx.author.id,
-        #             "invoked_at": message.created_at.isoformat(),
-        #             "prefix": ctx.prefix,
-        #             "failed": ctx.command_failed,
-        #         }
-        #     )
+        async with self._batch_lock:
+            self._data_batch.append(
+                {
+                    "name": command,
+                    "guild": guild_id,
+                    "channel": ctx.channel.id,
+                    "author": ctx.author.id,
+                    "invoked_at": message.created_at.isoformat(),
+                    "prefix": ctx.prefix,
+                    "failed": ctx.command_failed,
+                }
+            )
 
 
 # Based off of jishaku's GroupCogMeta

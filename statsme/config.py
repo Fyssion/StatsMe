@@ -1,4 +1,4 @@
 SETUP_CONFIG = False
 
-DATABASE_URI = None
+RECORDER = None
 TRACK_MESSAGES = False
