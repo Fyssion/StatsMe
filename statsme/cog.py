@@ -17,7 +17,7 @@ def configure(*, recorder, track_messages=False):
     config.SETUP_CONFIG = True
 
     config.RECORDER = recorder
-    if not issubclass(recorder, BaseRecorder):
+    if not isinstance(recorder, BaseRecorder):
         raise TypeError("'recorder' must subclass 'recorders.base.BaseRecorder'")
 
     config.TRACK_MESSAGES = track_messages
