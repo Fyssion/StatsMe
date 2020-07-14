@@ -9,6 +9,11 @@ Insipred by and based off of [jishaku](https://github.com/Gorialis/jishaku)
 StatsMe is currently in the planning stage.
 Everything you see here is subject to change.
 
+## Extras
+
+[databases](https://github.com/encode/databases) (with specified driver) -
+for use with `statsme.recorders.databases.DatabasesRecorder`
+
 ## Example
 
 A quick and basic example for StatsMe
