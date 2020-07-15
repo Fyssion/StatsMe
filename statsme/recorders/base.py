@@ -1,5 +1,6 @@
 class BaseRecorder:
     """Base recorder that all recorders should inherit from"""
+
     async def connect(self):
         """Run on cog startup
 
