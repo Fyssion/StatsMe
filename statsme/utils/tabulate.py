@@ -1,4 +1,4 @@
-def tabulate(data, *, codeblock=False, language="prolog"):
+def tabulate(data, *, as_list=False, codeblock=False, language="prolog"):
     """Create a pretty codeblock table
 
     Uses hljs's prolog syntax highlighting
@@ -11,7 +11,8 @@ def tabulate(data, *, codeblock=False, language="prolog"):
     -----------
     data: :class:`List[List[name, value]]
         The data to turn into a table
-
+    as_list: Optional[:class:`bool`]
+        Whether to return a list of strings. Overrides codeblock
     codeblock: Optional[:class:`bool`]
         Whether to return the table in a codeblock
     language: Optional[:class:`str`]
@@ -34,6 +35,9 @@ def tabulate(data, *, codeblock=False, language="prolog"):
         to_add = "".join(" " for i in range(longest_name - len(name)))
 
         table.append(f"{name}{to_add} :: {value}")
+
+    if as_list:
+        return table
 
     final_table = "\n".join(table)
 

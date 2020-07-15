@@ -13,17 +13,41 @@ from .recorders.base import BaseRecorder
 from .utils.tabulate import tabulate
 
 
-def configure(*, recorder, track_messages=False):
-    config.SETUP_CONFIG = True
+def configure(*, recorder, record_commands=True, record_uptime=True):
+    """Configure StatsMe
 
-    config.RECORDER = recorder
+    This MUST be run before loading statsme as an extension
+
+    Parameters
+    -----------
+    recorder: :class:`statsme.recorders.base.BaseRecorder`
+        The recorder to use for saving data
+    record_commands: Optional[:class:`bool`]
+        Whether to record commands run. Default is True
+    record_uptime: Optionl[:class:`bool`]
+        Whether to record uptime stats. Default is True
+
+    Raises
+    -------
+    :class:`TypeError`
+        When the recorder is not an instance or does not subclass
+        :class:`statsme.recorders.base.BaseRecorder`
+    """
+    config.configured = True
+
+    config.recorder = recorder
     if not isinstance(recorder, BaseRecorder):
         raise TypeError("'recorder' must subclass 'recorders.base.BaseRecorder'")
 
-    config.TRACK_MESSAGES = track_messages
+    config.record_commands = record_commands
+    config.record_uptime = record_uptime
 
 
-@commands.group(description="Set of commands for using StatsMe", aliases=["sme"])
+@commands.group(
+    description="Set of subcommands for using StatsMe",
+    aliases=["sme"],
+    invoke_without_command=True,
+)
 async def statsme(self, ctx):
     em = discord.Embed(title="StatsMe Bot Statistics", color=discord.Color.blurple())
     em.description = (
@@ -35,11 +59,14 @@ async def statsme(self, ctx):
 
     latency = self.bot.latency * 1000
 
+    socket_responses = humanize.intword(sum(self.bot_data.socket_stats.values()))
+
     data = [
         ["Commands used", sum(self.bot_data.commands.values())],
         ["Messages recieved", self.bot_data.messages_recieved],
         ["Messages sent", self.bot_data.messages_sent],
-        ["Websocket latency", f"{latency:.2f}ms"]
+        ["Websocket latency", f"{latency:.2f}ms"],
+        ["Socket responses", socket_responses,],
     ]
 
     table = tabulate(data, codeblock=True, language="asciidoc")
@@ -70,7 +97,7 @@ async def statsme(self, ctx):
     try:
         process = psutil.Process()
 
-        memory_usage = process.memory_full_info().uss / 1024**2
+        memory_usage = process.memory_full_info().uss / 1024 ** 2
         cpu_usage = process.cpu_percent() / psutil.cpu_count()
         pid = f"{process.name()} ({process.pid})"
         threads = process.num_threads()
@@ -96,7 +123,7 @@ async def statsme(self, ctx):
     python_version = f"{vi.major}.{vi.minor}.{vi.micro}"
 
     try:
-        dpy_version = pkg_resources.get_distribution('discord.py').version
+        dpy_version = pkg_resources.get_distribution("discord.py").version
 
     except (pkg_resources.DistributionNotFound, AttributeError):
         dpy_version = discord.__version__
@@ -120,7 +147,10 @@ class StatsMe(StatsMeBase, metaclass=CogGroupMeta, parent=statsme):
 
 
 def setup(bot):
-    if not config.SETUP_CONFIG:
+    if hasattr(bot, "_statsme_config"):
+        pass
+
+    elif not config.configured:
         raise NotConfigured("You must configure StatsMe before loading the extension.")
 
     bot.add_cog(StatsMe(bot))
