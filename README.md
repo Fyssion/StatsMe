@@ -2,7 +2,7 @@
 
 Statistics tracking cog for discord.py bots
 
-Insipred by and based off of [jishaku](https://github.com/Gorialis/jishaku)
+Insipred by and based off of [jishaku](https://github.com/Gorialis/jishaku) and [discord.ext.science](https://github.com/NCPlayz/discord-ext-science)
 
 ## Note
 
