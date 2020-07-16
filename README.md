@@ -14,16 +14,16 @@ Everything you see here is subject to change.
 Install StatsMe with your favorite varient of the below:
 
 ```shell
-python3 -m pip install StatsMe
-```
-
-Dev install:
-
-```shell
 python3 -m pip install git+https://github.com/Fyssion/StatsMe.git
 ```
 
 ## Recorders
+
+Unfornatantly, the below will not work yet.
+Due to unforseen circumstances, I'll have to wait discord-ext-menus
+is merged and officially released with discord.py
+
+Feel free to install the dependencies yourself, however. 
 
 | Recorder   | Install                          | Source                                                         |
 |------------|----------------------------------|----------------------------------------------------------------|
