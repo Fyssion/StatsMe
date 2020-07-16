@@ -9,6 +9,20 @@ Insipred by and based off of [jishaku](https://github.com/Gorialis/jishaku) and 
 StatsMe is currently in the planning stage.
 Everything you see here is subject to change.
 
+## Installation
+
+Install StatsMe with your favorite varient of the below:
+
+```shell
+python3 -m pip install StatsMe
+```
+
+Dev install:
+
+```shell
+python3 -m pip install git+https://github.com/Fyssion/StatsMe.git
+```
+
 ## Recorders
 
 | Recorder   | Install                          | Source                                                         |
