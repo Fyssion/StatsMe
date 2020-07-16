@@ -73,8 +73,6 @@ async def statsme(self, ctx):
 
     em.add_field(name="Bot stats (since boot)", value=table)
 
-    em.add_field(name="\u200b", value="\u200b")
-
     # Account stats
 
     channel_count = 0
@@ -115,7 +113,7 @@ async def statsme(self, ctx):
 
         value = tabulate(data, codeblock=True, language="asciidoc")
 
-    em.add_field(name="Process stats", value=value)
+    em.add_field(name="Process stats", value=value, inline=False)
 
     # System stats
 

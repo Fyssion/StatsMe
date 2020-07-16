@@ -41,7 +41,7 @@ class BaseRecorder:
 
         Parameters
         -----------
-        command_batch: :class:`list`
+        command_batch: :class:`List[dict]`
             The batch of commands to store
         """
         raise NotImplementedError()

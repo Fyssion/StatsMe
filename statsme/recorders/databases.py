@@ -31,5 +31,4 @@ class DatabasesRecorder(BaseRecorder):
         await self.db.disconnect()
 
     async def record_commands(self, command_batch):
-        # TODO: this function
-        pass
+        self.db.execute(commands.insert(), command_batch)
