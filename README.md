@@ -20,7 +20,7 @@ python3 -m pip install git+https://github.com/Fyssion/StatsMe.git
 ## Recorders
 
 Unfornatantly, the below will not work yet.
-Due to unforseen circumstances, I'll have to wait discord-ext-menus
+Due to unforeseen circumstances, I'll have to wait discord-ext-menus
 is merged and officially released with discord.py
 
 Feel free to install the dependencies yourself, however. 

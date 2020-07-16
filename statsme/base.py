@@ -32,8 +32,9 @@ class StatsMeBase(commands.Cog):
         self._batch_lock = asyncio.Lock(loop=bot.loop)
 
         # Starting tasks
-        self.bot.loop.create_task(self.recorder.connect())
-        self.bulk_insert_loop.start()
+        if self.recorder:
+            self.bot.loop.create_task(self.recorder.connect())
+            self.bulk_insert_loop.start()
 
         # add config to bot
         if not hasattr(bot, "_statsme_config"):

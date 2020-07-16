@@ -148,7 +148,4 @@ def setup(bot):
     if hasattr(bot, "_statsme_config"):
         pass
 
-    elif not config.configured:
-        raise NotConfigured("You must configure StatsMe before loading the extension.")
-
     bot.add_cog(StatsMe(bot))
