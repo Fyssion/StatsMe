@@ -52,11 +52,8 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Fyssion/StatsMe",
     project_urls={"Issue tracker": "https://github.com/Fyssion/StatsMe/issues",},
-    packages=setuptools.find_packages(),
-    extras_require={
-        "databases": ["databases"],
-        "asyncpg": ["asyncpg"],
-    },
+    packages=["statsme", "statsme/recorders", "statsme/utils"],
+    extras_require={"databases": ["databases"], "asyncpg": ["asyncpg"],},
     install_requires=requirements,
     classifiers=[
         "Programming Language :: Python :: 3.7",
