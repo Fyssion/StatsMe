@@ -1,4 +1,4 @@
-from discord.ext import commands, menus
+from discord.ext import commands, tasks, menus
 import discord
 
 import datetime
@@ -28,10 +28,12 @@ class StatsMeBase(commands.Cog):
         self.recorder = self.config.recorder
 
         # asyncio setup
-        self._data_batch = []
+        self._command_batch = []
         self._batch_lock = asyncio.Lock(loop=bot.loop)
 
+        # Starting tasks
         self.bot.loop.create_task(self.recorder.connect())
+        self.bulk_insert_loop.start()
 
         # add config to bot
         if not hasattr(bot, "_statsme_config"):
@@ -53,6 +55,13 @@ class StatsMeBase(commands.Cog):
 
     def cog_unload(self):
         self.bot.loop.create_task(self.recorder.disconnect())
+
+    # Tasks
+
+    @tasks.loop(seconds=10.0)
+    async def bulk_insert_loop(self):
+        async with self._batch_lock:
+            await self.bulk_insert()
 
     # Event listeners
 
@@ -76,6 +85,13 @@ class StatsMeBase(commands.Cog):
     async def on_command(self, ctx):
         await self.register_command(ctx)
 
+    # Functions
+
+    async def bulk_insert(self):
+        if self._command_batch:
+            await self.recorder.record_commands(self._command_batch)
+            self._command_batch.clear()
+
     async def register_command(self, ctx):
         if ctx.command is None:
             return
@@ -90,7 +106,7 @@ class StatsMeBase(commands.Cog):
             guild_id = ctx.guild.id
 
         async with self._batch_lock:
-            self._data_batch.append(
+            self._command_batch.append(
                 {
                     "name": command,
                     "guild": guild_id,
@@ -106,7 +122,7 @@ class StatsMeBase(commands.Cog):
 
     @commands.command(
         description="View websocket stats",
-        aliases=["socket", "socketstats", "websocketstats"],
+        aliases=["ws", "socket", "socketstats", "websocketstats"],
     )
     async def websocket(self, ctx):
         sorted_stats = {}

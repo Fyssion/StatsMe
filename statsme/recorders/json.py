@@ -1,17 +1,27 @@
 import json
+import os
 
 from .base import BaseRecorder
 
+FOLDER_NAME = "statsme_json"
+COMMANDS = FOLDER_NAME + "/commands.json"
+
 
 class JSONRecorder(BaseRecorder):
-    def __init__(self, file):
-        self.file = file
-
+    """Recorder using python's builtin json module"""
     async def connect(self):
-        pass
+        if not os.path.exists(FOLDER_NAME):
+            os.mkdir(FOLDER_NAME)
 
-    async def disconnect(self):
-        pass
+        if not os.path.isfile(COMMANDS):
+            with open(COMMANDS, "w") as f:
+                json.dump([], f)
 
-    async def record_commands(self):
-        pass
+    async def record_commands(self, command_batch):
+        with open(COMMANDS, "r") as f:
+            commands = json.load(f)
+
+        commands.extend(command_batch)
+
+        with open(COMMANDS, "w") as f:
+            json.dump(commands, f, indent=4)
