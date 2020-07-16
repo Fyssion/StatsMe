@@ -9,7 +9,13 @@ Insipred by and based off of [jishaku](https://github.com/Gorialis/jishaku) and 
 StatsMe is currently in the planning stage.
 Everything you see here is subject to change.
 
-## Extras
+## Recorders
+
+| Recorder   | Install                          | Source                                                         |
+|------------|----------------------------------|----------------------------------------------------------------|
+| json       | None                             | [json](https://github.com/python/cpython/tree/master/Lib/json) |
+| databases  | `pip install StatsMe[databases]` | [encode/databases](https://github.com/encode/databases)        |
+| asyncpg    | `pip install StatsMe[asyncpg]`   | [MagicStack/asyncpg](https://github.com/MagicStack/asyncpg)    |
 
 [databases](https://github.com/encode/databases) (with specified driver) -
 for use with `statsme.recorders.databases.DatabasesRecorder`

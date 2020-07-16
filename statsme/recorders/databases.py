@@ -1,7 +1,11 @@
 from databases import Database
 import sqlalchemy
+from sqlalchemy.schema import CreateTable
 
 from .base import BaseRecorder
+
+
+raise NotImplementedError("Sorry, this feature is still in development. Try AsyncPGRecorder instead.")
 
 
 metadata = sqlalchemy.MetaData()
@@ -16,8 +20,10 @@ commands = sqlalchemy.Table(
     sqlalchemy.Column("author_id", sqlalchemy.Integer, index=True),
     sqlalchemy.Column("invoked_at", sqlalchemy.DateTime, index=True),
     sqlalchemy.Column("prefix", sqlalchemy.String),
-    sqlalchemy.Column("author_id", sqlalchemy.Boolean, index=True),
+    sqlalchemy.Column("failed", sqlalchemy.Boolean, index=True),
 )
+
+tables = [commands]
 
 
 class DatabasesRecorder(BaseRecorder):
@@ -27,8 +33,13 @@ class DatabasesRecorder(BaseRecorder):
     async def connect(self):
         await self.db.connect()
 
+        async with self.db.connection() as conn:
+            for table in tables:
+                create_expr = CreateTable(table)
+                await conn.execute(create_expr)
+
     async def disconnect(self):
         await self.db.disconnect()
 
     async def record_commands(self, command_batch):
-        self.db.execute(commands.insert(), command_batch)
+        await self.db.execute(commands.insert(), command_batch)
